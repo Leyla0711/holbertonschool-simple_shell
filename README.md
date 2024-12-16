@@ -1,4 +1,4 @@
-holberton task (groop project?)
+holberton task (pair work)
 
 0. README, man, AUTHORS
 mandatory
