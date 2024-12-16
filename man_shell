@@ -1,0 +1,36 @@
+.\" Manpage for Simple Shell.
+.TH man 1 "11 November 2021" "1.0" "Simple Shell man page"
+.SH NAME
+Simple Shell \- a new Simple Shell created for an exercice utilisable in C language.
+.SH SYNOPSIS
+.B ./hsh \fR[OPTION]... [FILE]...
+.SH DESCRIPTION
+.B ./hsh \fR\- It\'s executing the shell programme, you have jsute to type your commande.
+
+To execute it you have to execute this commande : gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+
+After you can do ./hsh to enter in the Simple Shell or do "cat test_ls_2 | ./hsh" to execute it in the terminal.
+
+.SH EXEMPLES
+.B out the ./hsh echo \"ls\" | ./hsh
+
+It\'s show the ls command use by the passive way
+
+.B in the ./hsh ls -l
+
+It\'s did the ls command with -l flag
+
+.B in the ./hsh exit
+
+It\'s exit the programme
+
+.B in the ./hsh cd
+
+It\'s change the directory
+
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+.SS Joel Dumortier
+.SS Philippe Willot
+.SS Colas Renard
