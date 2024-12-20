@@ -1,65 +1,31 @@
 #include "main.h"
-/**
- * _printf - printf function
- * @format: string
- *
- * Return: number of characters printed
- */
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdio.h>
+
+/* Declare the checkSpecifier function prototype */
+int checkSpecifier(const char *format, int i, va_list arglist);
+
 int _printf(const char *format, ...)
 {
-	va_list arglist;
-	int count = 0, i = 0;
+    va_list arglist;
+    int count = 0, i;
 
-	va_start(arglist, format);
+    va_start(arglist, format);  /* Start variadic arguments */
 
-	if (format == NULL)
-		return (-1);
+    for (i = 0; format[i] != '\0'; i++)
+    {
+        if (format[i] == '%')  /* Check for a format specifier */
+        {
+            count += checkSpecifier(format, i, arglist); /* Process specifier */
+        }
+        else
+        {
+            write(1, &format[i], 1);  /* Print character */
+            count++;
+        }
+    }
 
-	while (format[i] != '\0')
-	{
-		if (format[i] == '%' && format[i + 1] != '\0')
-		{
-			count += checkSpecifier(format, i, arglist);
-			i++;
-		}
-		else if (format[i] != '%')
-		{
-			write(1, &format[i], 1);
-			count++;
-		}
-		else
-			return (-1);
-		i++;
-	}
-	va_end(arglist);
-	return (count);
-}
-
-/**
- * _printp - prints int to hexadecimal
- * @arglist: list of arguments
- *
- * Return: number of characters printed
- */
-int _printp(va_list arglist)
-{
-	uintptr_t ptr = va_arg(arglist, uintptr_t);
-	int i = 0;
-
-	if (ptr == 0)
-	{
-		write(1, "(", 1);
-		write(1, "n", 1);
-		write(1, "i", 1);
-		write(1, "l", 1);
-		write(1, ")", 1);
-		return (5);
-	}
-
-	write(1, "0", 1);
-	write(1, "x", 1);
-	i += 2;
-	i += write_x(ptr);
-
-	return (i);
+    va_end(arglist);  /* Clean up the variadic arguments */
+    return count;
 }

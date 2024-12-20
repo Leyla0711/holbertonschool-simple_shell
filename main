@@ -1,0 +1,13 @@
+#ifndef MAIN_H
+#define MAIN_H
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdint.h>
+
+int _printf(const char *format, ...);
+int checkSpecifier(const char *format, size_t i, va_list arglist);
+int _printp(va_list arglist);
+
+#endif /* MAIN_H */

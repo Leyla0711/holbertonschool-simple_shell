@@ -1,19 +1,20 @@
-#include "main.h"
-/**
- * exist - Verify if a file exist
- * @pathname: path to the file
- * Return: 0 if the file exist or -1 if not
- */
-int exist(char *pathname)
-{
-	int exist_stat;
+#include <fcntl.h>   /* For open and O_RDONLY */
+#include <unistd.h>  /* For close */
 
-	exist_stat = (open(pathname, O_RDONLY));
-	if (exist_stat != -1)
-	{
-		close(exist_stat);
-		return (0);
-	}
-	else
-		return (-1);
+/**
+ * exist - Check if a file exists
+ * @pathname: The file path
+ * Return: 1 if the file exists, 0 otherwise
+ */
+int exist(const char *pathname)
+{
+    int exist_stat;
+
+    exist_stat = open(pathname, O_RDONLY); /* Open the file in read-only mode */
+    if (exist_stat == -1)
+        return 0; /* File does not exist */
+
+    close(exist_stat); /* Close the file descriptor */
+    return 1; /* File exists */
 }
+
