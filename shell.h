@@ -1,11 +1,12 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <sys/types.h>  /* Include for pid_t */
-#include <sys/wait.h>   /* Include for wait() */
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-/* Function prototype for command execution */
-void execute_command(char *command);  /* Ensure the return type is void */
+/* Function to execute a command */
+void execute_command(char *command);  /* Declaration */
 
-#endif /* SHELL_H */
+#endif  /* SHELL_H */
 
