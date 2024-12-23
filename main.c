@@ -1,19 +1,22 @@
 #include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <stddef.h>  /* For NULL */
+#include <stdlib.h>  /* For free */
 
-void prompt(void) {
-    /* Display the shell prompt */
-    printf("$ ");
-}
+int main(void) {
+    char *command = NULL;
 
-char *read_input(void) {
-    char *input = NULL;
-    size_t len = 0;
-    
-    /* Read user input */
-    getline(&input, &len, stdin);
+    /* Call prompt function to display prompt */
+    prompt();
 
-    return input;
+    /* Call read_input to capture user input */
+    command = read_input();
+
+    /* Call execute_command to process the command */
+    execute_command(command);
+
+    /* Free dynamically allocated memory */
+    free(command);
+
+    return 0;
 }
 
