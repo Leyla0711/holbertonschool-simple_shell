@@ -23,7 +23,10 @@ void execute_command(char *command)
     if (pid == 0) /* Child process */
     {
         /* Prepare the command arguments for execvp */
-        char *args[] = {command, NULL};  /* Command and NULL to terminate arguments array */
+        char *args[2];  /* We know there will be at least two elements: command and NULL */
+        args[0] = command;  /* The command itself */
+        args[1] = NULL;     /* NULL terminate the array for execvp */
+        
         if (execvp(command, args) == -1)  /* Execute the command */
         {
             perror("execvp failed"); /* If execvp fails, print an error */
@@ -38,7 +41,6 @@ void execute_command(char *command)
 
 ssize_t read_input(char **command, size_t *len)
 {
-    /* Read the user input using getline */
     return getline(command, len, stdin); /* getline returns ssize_t */
 }
 
