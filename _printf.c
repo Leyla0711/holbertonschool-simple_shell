@@ -1,31 +1,39 @@
-#include "main.h"
 #include <stdarg.h>
-#include <unistd.h>
 #include <stdio.h>
-
-/* Declare the checkSpecifier function prototype */
-int checkSpecifier(const char *format, int i, va_list arglist);
+#include <string.h>
+#include "shell.h"
 
 int _printf(const char *format, ...)
 {
-    va_list arglist;
-    int count = 0, i;
+    va_list args;
+    int count = 0;
+    int i;
 
-    va_start(arglist, format);  /* Start variadic arguments */
+    va_start(args, format);
 
-    for (i = 0; format[i] != '\0'; i++)
-    {
-        if (format[i] == '%')  /* Check for a format specifier */
-        {
-            count += checkSpecifier(format, i, arglist); /* Process specifier */
-        }
-        else
-        {
-            write(1, &format[i], 1);  /* Print character */
+    // Loop through each character in the format string
+    for (i = 0; format[i] != '\0'; i++) {
+        if (format[i] == '%') {
+            i++;  // Skip the '%' character
+
+            if (format[i] == 'c') {
+                char c = va_arg(args, int);  // Get the next argument as a char
+                putchar(c);
+                count++;
+            }
+            else if (format[i] == 's') {
+                char *s = va_arg(args, char *);  // Get the next argument as a string
+                fputs(s, stdout);
+                count += strlen(s);
+            }
+            // Add more format specifiers here if needed
+        } else {
+            putchar(format[i]);
             count++;
         }
     }
 
-    va_end(arglist);  /* Clean up the variadic arguments */
+    va_end(args);
     return count;
 }
+

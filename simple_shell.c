@@ -1,85 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
+#include <sys/types.h>  // Include for pid_t
+#include <sys/wait.h>   // Include for wait()
+
 #include "shell.h"
 
-/* Function to display the prompt */
 void prompt(void)
 {
-    printf("$ ");
+    printf("$ ");  // Display the prompt
 }
 
-/* Main function */
-int main(void)
+void execute_command(char *command)  // Change return type to void
 {
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    pid_t pid;
-    int status;
+    pid_t pid = fork();  // Create a child process
 
-    while (1)
-    {
-        prompt();  /* Display the prompt */
-
-        /* Read user input */
-        read = getline(&line, &len, stdin);
-
-        if (read == -1)
-        {
-            /* EOF (Ctrl+D) or error reading input */
-            if (feof(stdin))
-            {
-                printf("\n");
-                break;
-            }
-            perror("getline");
-            exit(EXIT_FAILURE);
-        }
-
-        /* Remove the newline character from the command input */
-        line[strcspn(line, "\n")] = 0;
-
-        /* If command is empty, continue to the next loop */
-        if (strlen(line) == 0)
-        {
-            continue;
-        }
-
-        /* Create a child process to execute the command */
-        pid = fork();
-
-        if (pid == -1)
-        {
-            /* Error in fork() */
-            perror("fork");
-            exit(EXIT_FAILURE);
-        }
-
-        if (pid == 0)  /* Child process */
-        {
-            /* Prepare the argument list for execve */
-            char *args[2];  /* Declare the array with two elements */
-            args[0] = line;  /* First element is the command */
-            args[1] = NULL;  /* NULL to indicate the end of the arguments */
-
-            if (execve(line, args, NULL) == -1)
-            {
-                /* Command not found */
-                perror("./hsh");
-                exit(EXIT_FAILURE);
-            }
-        }
-        else  /* Parent process */
-        {
-            /* Wait for the child process to finish */
-            waitpid(pid, &status, 0);
-        }
+    if (pid == -1) {
+        perror("fork failed");
+        exit(1);
     }
 
-    free(line);
-    return (0);
+    if (pid == 0) {  // Child process
+        char *args[] = {command, NULL};  // Command argument array
+        if (execve(command, args, NULL) == -1) {
+            perror("execve failed");
+            exit(1);
+        }
+    } else {  // Parent process
+        wait(NULL);  // Wait for the child process to finish
+    }
 }
 

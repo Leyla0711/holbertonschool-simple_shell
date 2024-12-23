@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
+#include <sys/types.h>  // Include for pid_t
+#include <sys/wait.h>   // Include for wait()
+
 #include "shell.h"
 
-/* Function to execute a command */
-int execute_command(char *command)
+void prompt(void)
 {
-    /* Prepare the argument list for execve */
-    char *args[2];  /* Declare the array with two elements */
-    args[0] = command;  /* First element is the command */
-    args[1] = NULL;  /* NULL to indicate the end of the arguments */
+    printf("$ ");  // Display the prompt
+}
 
-    if (execve(command, args, NULL) == -1)
-    {
-        /* Command not found */
-        perror("./hsh");
-        exit(EXIT_FAILURE);
+void execute_command(char *command)  // Change return type to void
+{
+    pid_t pid = fork();  // Create a child process
+
+    if (pid == -1) {
+        perror("fork failed");
+        exit(1);
     }
-    return 0;
+
+    if (pid == 0) {  // Child process
+        char *args[] = {command, NULL};  // Command argument array
+        if (execve(command, args, NULL) == -1) {
+            perror("execve failed");
+            exit(1);
+        }
+    } else {  // Parent process
+        wait(NULL);  // Wait for the child process to finish
+    }
 }
 
