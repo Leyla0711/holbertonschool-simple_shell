@@ -5,6 +5,8 @@
 #include <sys/wait.h>
 #include "shell.h"
 
+#define MAX_COMMAND_LENGTH 1024
+
 /* Function to display the prompt */
 void prompt(void)
 {
@@ -14,7 +16,7 @@ void prompt(void)
 /* Main function */
 int main(void)
 {
-    char *line = NULL;
+    char *command = NULL;
     size_t len = 0;
     ssize_t read;
     pid_t pid;
@@ -25,7 +27,7 @@ int main(void)
         prompt();  /* Display the prompt */
 
         /* Read user input */
-        read = getline(&line, &len, stdin);
+        read = getline(&command, &len, stdin);
 
         if (read == -1)
         {
@@ -40,10 +42,10 @@ int main(void)
         }
 
         /* Remove the newline character from the command input */
-        line[strcspn(line, "\n")] = 0;
+        command[strcspn(command, "\n")] = 0;
 
         /* If command is empty, continue to the next loop */
-        if (strlen(line) == 0)
+        if (strlen(command) == 0)
         {
             continue;
         }
@@ -62,10 +64,10 @@ int main(void)
         {
             /* Prepare the argument list for execve */
             char *args[2];  /* Declare the array with two elements */
-            args[0] = line;  /* First element is the command */
+            args[0] = command;  /* First element is the command */
             args[1] = NULL;  /* NULL to indicate the end of the arguments */
 
-            if (execve(line, args, NULL) == -1)
+            if (execve(command, args, NULL) == -1)
             {
                 /* Command not found */
                 perror("./hsh");
@@ -79,7 +81,7 @@ int main(void)
         }
     }
 
-    free(line);
+    free(command);
     return (0);
 }
 
