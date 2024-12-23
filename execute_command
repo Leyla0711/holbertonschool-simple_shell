@@ -27,3 +27,10 @@ void execute_command(char *command) {
     }
 }
 
+int main() {
+    char *command = "/bin/ls";  /* Example command (list files in the current directory) */
+    execute_command(command);  /* Call execute_command with the command */
+    
+    return 0;
+}
+

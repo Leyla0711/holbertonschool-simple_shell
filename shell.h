@@ -1,14 +1,13 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>  // Include for pid_t
-#include <sys/wait.h>   // Include for wait()
+#include <sys/types.h>  /* Include for pid_t */
+#include <sys/wait.h>   /* Include for wait() */
+#include <unistd.h>      /* Include for fork(), execve(), etc. */
 
-void prompt(void);
-void execute_command(char *command);  // Ensure the return type is void
+/* Function declarations */
+void prompt(void);  /* Declaration of the prompt function */
+void execute_command(char *command);  /* Ensure the return type is void */
 
 #endif /* SHELL_H */
 
