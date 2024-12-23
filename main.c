@@ -1,22 +1,19 @@
-#include <stddef.h>  /* Define NULL */
 #include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-int main(void) {
-    char *command = NULL;
+void prompt(void) {
+    /* Display the shell prompt */
+    printf("$ ");
+}
 
-    /* Main loop for shell */
-    while (1) {
-        prompt();  /* Function to display prompt */
-        
-        command = read_input();  /* Function to read user input */
-        
-        if (command == NULL) {
-            break;  /* Exit if no command is provided */
-        }
-        
-        execute_command(command);  /* Function to execute the command */
-    }
+char *read_input(void) {
+    char *input = NULL;
+    size_t len = 0;
+    
+    /* Read user input */
+    getline(&input, &len, stdin);
 
-    return 0;
+    return input;
 }
 
