@@ -1,24 +1,30 @@
+/* main.c */
 #include "shell.h"
-#include <stddef.h>   /* For NULL */
-#include <stdio.h>    /* For perror */
-#include <stdlib.h>   /* For exit, free */
+#include <stdlib.h>
+#include <stdio.h>  /* For perror and printf */
 
 int main(void)
 {
     char *command = NULL;
+    size_t len = 0;
+    ssize_t nread;
 
-    prompt();  /* Display prompt */
-    command = read_input();  /* Get user input */
-
-    if (command == NULL)
+    /* Prompt user for input */
+    prompt();
+    
+    nread = read_input(&command, &len);  /* Correct function call */
+    if (nread == -1)
     {
         perror("read_input failed");
-        exit(1);  /* Exit with an error code if command allocation fails */
+        exit(1);
     }
+    
+    /* Execute the command */
+    execute_command(command);
 
-    execute_command(command);  /* Execute the command */
-    free(command);  /* Free memory allocated for the command */
+    /* Free memory allocated for the command */
+    free(command);
 
-    return (0);
+    return 0;
 }
 

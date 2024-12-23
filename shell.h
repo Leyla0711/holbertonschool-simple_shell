@@ -2,10 +2,13 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-/* Function prototypes */
-void prompt(void);
-char *read_input(void);
-void execute_command(char *command);  /* Declare execute_command once */
+#include <stddef.h>  /* For ssize_t and size_t */
+#include <stdio.h>   /* For perror */
 
-#endif /* SHELL_H */
+/* Function declarations */
+void prompt(void);
+ssize_t read_input(char **command, size_t *len);
+void execute_command(char *command);
+
+#endif
 
