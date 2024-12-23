@@ -1,31 +1,41 @@
 #include "shell.h"
-#include <stdio.h>   /* For perror */
-#include <stdlib.h>  /* For exit, malloc, free */
-#include <sys/types.h>  /* For pid_t */
 #include <unistd.h>  /* For fork, execvp */
-#include <sys/wait.h>  /* For wait */
+#include <sys/wait.h> /* For wait */
+#include <stdlib.h> /* For malloc, free */
 
-void execute_command(char *command) {
-    pid_t pid = fork();  /* Fork a child process */
+void execute_command(char *command)
+{
+    pid_t pid = fork(); /* Create a new process */
 
-    if (pid == -1) {
-        perror("fork failed");
+    if (pid == -1)
+    {
+        perror("fork failed"); /* Fork failed */
         exit(1);
-    } else if (pid == 0) {
-        /* In the child process, execute the command */
-        
-        /* Dynamically allocate memory for the argument array */
-        char *args[2];
-        args[0] = command;
-        args[1] = NULL;  /* Null-terminate the argument list */
+    }
+    else if (pid == 0)
+    {
+        /* Child process */
+        char **args = malloc(2 * sizeof(char *)); /* Allocate memory for args */
+        if (args == NULL)
+        {
+            perror("malloc failed");
+            exit(1);
+        }
 
-        execvp(command, args);  /* Execute the command */
-        
-        /* If execvp fails */
-        perror("execvp failed");
-        exit(1);
-    } else {
-        wait(NULL);  /* Wait for the child process to finish */
+        args[0] = command;  /* The first argument is the command itself */
+        args[1] = NULL;     /* The last element should be NULL to indicate end of arguments */
+
+        if (execvp(command, args) == -1)
+        {
+            perror("execvp failed"); /* Exec failed */
+            free(args); /* Free the allocated memory */
+            exit(1);
+        }
+    }
+    else
+    {
+        /* Parent process */
+        wait(NULL); /* Wait for the child process to finish */
     }
 }
 

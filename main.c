@@ -1,22 +1,24 @@
-/* main.c */
 #include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-int main(void) {
+int main(void)
+{
     char *command = NULL;
 
-    /* Call prompt function to display prompt */
-    prompt();
+    while (1)
+    {
+        prompt(); /* Display the prompt */
+        command = read_input(); /* Read the input command */
+        if (command == NULL)
+        {
+            /* Handle error or exit */
+            perror("read_input failed");
+            exit(1);
+        }
 
-    /* Read user input */
-    command = read_input();
+        execute_command(command); /* Execute the command */
+        free(command); /* Free memory allocated for the command */
+    }
 
-    /* Execute the command */
-    execute_command(command);
-
-    /* Free allocated memory */
-    free(command);
     return 0;
 }
 
