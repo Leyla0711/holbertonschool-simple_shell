@@ -1,39 +1,22 @@
 #include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include "shell.h"
+#include <unistd.h>
 
-int _printf(const char *format, ...)
-{
+/* Function to write formatted output */
+int _printf(const char *format, ...) {
+    int i = 0;
     va_list args;
-    int count = 0;
-    int i;
 
     va_start(args, format);
 
-    // Loop through each character in the format string
+    /* Loop through each character in the format string */
     for (i = 0; format[i] != '\0'; i++) {
+        /* Process each character */
         if (format[i] == '%') {
-            i++;  // Skip the '%' character
-
-            if (format[i] == 'c') {
-                char c = va_arg(args, int);  // Get the next argument as a char
-                putchar(c);
-                count++;
-            }
-            else if (format[i] == 's') {
-                char *s = va_arg(args, char *);  // Get the next argument as a string
-                fputs(s, stdout);
-                count += strlen(s);
-            }
-            // Add more format specifiers here if needed
-        } else {
-            putchar(format[i]);
-            count++;
+            /* Handle special formatting */
         }
     }
 
     va_end(args);
-    return count;
+    return 0;
 }
 

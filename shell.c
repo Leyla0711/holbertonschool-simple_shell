@@ -3,7 +3,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "shell.h"
 
+/* Function to execute a command */
 void execute_command(char *command) {
     pid_t pid = fork();  /* Create a child process */
 
@@ -18,7 +20,7 @@ void execute_command(char *command) {
         args[0] = command;  /* Set first argument to the command */
         args[1] = NULL;  /* Null-terminate the argument list */
 
-        if (execve(command, args, NULL) == -1) {  /* Execute the command */
+        if (execve(command, args, NULL) == -1) {
             perror("execve failed");
             exit(1);
         }
