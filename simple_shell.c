@@ -1,31 +1,35 @@
-/* simple_shell.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "shell.h"
-#include <stdlib.h>  /* For free and malloc */
-#include <stdio.h>   /* For perror */
 
-int main(void)
+void prompt(void)
 {
-    char *command = NULL;
-    size_t len = 0;
-    ssize_t nread;
+    printf("Shell> ");  // Display a prompt for the user to enter a command
+}
 
-    /* Prompt user for input */
-    prompt();
-
-    nread = read_input(&command, &len);  /* Correct function call */
-    
-    if (nread == -1) {
-        perror("read_input failed");
-        free(command);  /* Make sure to free memory if an error occurs */
-        exit(1);
+void execute_command(char *command)
+{
+    if (fork() == 0) // Child process
+    {
+        char *args[] = {command, NULL}; // Prepare the command for execvp
+        execvp(command, args);  // Execute the command
+        perror("execvp failed");  // If execvp fails, print an error
+        exit(1);  // Exit if execvp fails
     }
-    
-    /* Execute the command */
-    execute_command(command);
+    else
+    {
+        wait(NULL); // Parent process waits for child to finish
+    }
+}
 
-    /* Free memory allocated for the command */
-    free(command);
-
-    return 0;
+ssize_t read_input(char **command, size_t *len)
+{
+    ssize_t nread = getline(command, len, stdin);
+    if (nread == -1)
+    {
+        return -1; // If input reading fails, return -1
+    }
+    return nread;
 }
 

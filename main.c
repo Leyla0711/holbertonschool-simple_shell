@@ -1,7 +1,6 @@
-/* main.c */
-#include "shell.h"
-#include <stdlib.h>
-#include <stdio.h>  /* For perror and printf */
+#include <stdio.h>  // For perror and printf
+#include <stdlib.h> // For malloc, free, exit
+#include "shell.h"  // Include your shell.h header
 
 int main(void)
 {
@@ -9,22 +8,25 @@ int main(void)
     size_t len = 0;
     ssize_t nread;
 
-    /* Prompt user for input */
+    /* Display the prompt */
     prompt();
-    
-    nread = read_input(&command, &len);  /* Correct function call */
+
+    /* Read user input */
+    nread = read_input(&command, &len);
+
+    /* Check for errors in reading input */
     if (nread == -1)
     {
         perror("read_input failed");
-        exit(1);
+        free(command);  // Free the memory
+        exit(1);         // Exit the program
     }
-    
+
     /* Execute the command */
     execute_command(command);
 
-    /* Free memory allocated for the command */
+    /* Free memory */
     free(command);
-
     return 0;
 }
 
