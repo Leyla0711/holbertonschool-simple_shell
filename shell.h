@@ -5,8 +5,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-/* Function to execute a command */
-void execute_command(char *command);  /* Declaration */
+/* Declare the function */
+void execute_command(char *command);
 
 #endif  /* SHELL_H */
 
