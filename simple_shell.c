@@ -1,46 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>   /* Include for fork and execvp */
-#include <sys/wait.h> /* Include for wait */
-#include "shell.h"
+#include <unistd.h>    // For fork, execvp
+#include <sys/wait.h>  // For wait
 
-void prompt(void)
-{
-    printf("Shell> ");  /* Display a prompt for the user to enter a command */
-}
+void execute_command(char *command) {
+    pid_t pid;
+    int status;
 
-void execute_command(char *command)
-{
-    pid_t pid = fork(); /* Create a new process */
-    
-    if (pid == -1) /* Check if fork failed */
-    {
-        perror("fork failed");
-        exit(1);
-    }
-    
-    if (pid == 0) /* Child process */
-    {
-        /* Prepare the command arguments for execvp */
-        char *args[2];  /* We know there will be at least two elements: command and NULL */
-        args[0] = command;  /* The command itself */
-        args[1] = NULL;     /* NULL terminate the array for execvp */
-        
-        if (execvp(command, args) == -1)  /* Execute the command */
-        {
-            perror("execvp failed"); /* If execvp fails, print an error */
-            exit(1);  /* Exit child process if execvp fails */
-        }
-    }
-    else /* Parent process */
-    {
-        wait(NULL); /* Wait for child process to finish */
+    pid = fork(); // Create a new process
+    if (pid == 0) {
+        /* Child process */
+        char *args[] = {command, NULL}; // Prepare the command and args for execvp
+        execvp(command, args); // Execute the command
+        perror("execvp failed"); // If execvp fails, print error message
+        exit(1); // Exit the child process with failure
+    } else if (pid > 0) {
+        /* Parent process */
+        wait(&status); // Wait for child to finish execution
+    } else {
+        perror("fork failed"); // If fork fails, print error message
     }
 }
 
-ssize_t read_input(char **command, size_t *len)
-{
-    return getline(command, len, stdin); /* getline returns ssize_t */
+int main(void) {
+    char *command = "ls";  // Example command for testing
+    execute_command(command); // Execute the command
+    return 0;
 }
 
