@@ -1,6 +1,7 @@
+/* main.c */
 #include "shell.h"
-#include <stddef.h>  /* For NULL */
-#include <stdlib.h>  /* For free */
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(void) {
     char *command = NULL;
@@ -8,15 +9,14 @@ int main(void) {
     /* Call prompt function to display prompt */
     prompt();
 
-    /* Call read_input to capture user input */
+    /* Read user input */
     command = read_input();
 
-    /* Call execute_command to process the command */
+    /* Execute the command */
     execute_command(command);
 
-    /* Free dynamically allocated memory */
+    /* Free allocated memory */
     free(command);
-
     return 0;
 }
 
