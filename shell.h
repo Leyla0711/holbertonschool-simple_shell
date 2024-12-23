@@ -1,12 +1,10 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-/* Declare the function */
+/* Function prototypes */
 void execute_command(char *command);
+void prompt(void);
+char *read_input(void);
 
-#endif  /* SHELL_H */
+#endif /* SHELL_H */
 
