@@ -1,35 +1,31 @@
-/* shell.c */
 #include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
 
-void execute_command(char *command)
+int execute_command(char **args)
 {
-    pid_t pid = fork();  /* Create a new process */
+    pid_t pid;
+    int status;
 
-    if (pid < 0)  /* Fork failed */
-    {
-        perror("fork failed");
+    if (args[0] == NULL) {
+        return 1;  /* No command to execute */
+    }
+
+    pid = fork();
+    if (pid == -1) {
+        perror("fork");
         exit(1);
     }
 
-    if (pid == 0)  /* Child process */
-    {
-        char *args[2];
-        args[0] = command;  /* Set the command */
-        args[1] = NULL;  /* Null-terminate the argument array */
-
-        if (execvp(command, args) == -1)  /* Execute the command */
-        {
-            perror("execvp failed");
-            exit(1);
+    if (pid == 0) {
+        /* Child process */
+        if (execve(args[0], args, NULL) == -1) {
+            perror(args[0]);  /* Print error if execve fails */
         }
+        exit(1);
+    } else {
+        /* Parent process */
+        waitpid(pid, &status, 0);
     }
-    else  /* Parent process */
-    {
-        wait(NULL);  /* Wait for the child to finish */
-    }
+
+    return 1;  /* Continue execution */
 }
 
