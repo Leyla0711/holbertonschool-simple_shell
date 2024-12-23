@@ -1,6 +1,6 @@
-#include <stdio.h>  // For perror and printf
-#include <stdlib.h> // For malloc, free, exit
-#include "shell.h"  // Include your shell.h header
+#include <stdio.h>  /* For perror and printf */
+#include <stdlib.h> /* For malloc, free, exit */
+#include "shell.h"  /* Include your shell.h header */
 
 int main(void)
 {
@@ -18,8 +18,8 @@ int main(void)
     if (nread == -1)
     {
         perror("read_input failed");
-        free(command);  // Free the memory
-        exit(1);         // Exit the program
+        free(command);  /* Free the memory */
+        exit(1);         /* Exit the program */
     }
 
     /* Execute the command */

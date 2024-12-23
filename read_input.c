@@ -1,9 +1,10 @@
-/* read_input.c */
-#include "shell.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include "shell.h"
 
 ssize_t read_input(char **command, size_t *len)
 {
-    return getline(command, len, stdin);  /* getline returns ssize_t */
+    /* Read the user input using getline */
+    return getline(command, len, stdin); /* getline returns ssize_t */
 }
 
